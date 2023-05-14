@@ -3,17 +3,20 @@ package db
 import (
 	"log"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
+type DBConfig struct {
+	DB gorm.DB
+}
+
 func DB() *gorm.DB {
-	dsn := "host=localhost user=postgres password=admin dbname=todo port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Println("Connecting Postgres Error", err)
+		log.Println("Unable to connect", err)
 	}
-	log.Println(db)
-	db.AutoMigrate(&User{}, &Task{})
 	return db
 }
